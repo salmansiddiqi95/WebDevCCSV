@@ -27,17 +27,35 @@ const theme = createMuiTheme({
   }
 });
 
+
 class App extends React.Component {
   state={
     inputSphere:0,
+    inputCylinder:0,
+    inputAddition:0,
     results:[],
     darkMode: false,
   }
-  findResults=(inputSphere)=>{
-    this.setState({results:result.data})
+  showAll=()=> {
+    result.data.map((data, i) => {
+      this.state.results.push(result.data[i]);
+      console.log(this.state.results)
+    })
+    this.onChange()
+  }
+  findResults=(inputSphere, inputCylinder, inputAddition)=>{
+    this.state.results = [];
+    result.data.map((data, i) => {
+      if((this.state.inputSphere <= result.data[i].maxSphere && this.state.inputSphere >= result.data[i].minSphere) &&
+         (this.state.inputCylinder <= result.data[i].maxCylinder && this.state.inputCylinder >= result.data[i].minCylinder) &&
+         (this.state.inputAddition <= result.data[i].maxAddition && this.state.inputAddition >= result.data[i].minAddition)) {
+         this.state.results.push(result.data[i]);
+      }
+    })
+    this.onChange()
   }
   onSearch=()=>{
-    console.log("to be done")
+    this.findResults()
   }
   onChange=(key,value)=>{
     this.setState({[key]:value})
@@ -47,16 +65,33 @@ class App extends React.Component {
       darkMode: !this.state.darkMode
     })
   }
+  componentDidMount () {
+    this.showAll();
+  }
   render (){
-    const { darkMode, inputSphere, results } = this.state;
+    const { darkMode, inputSphere, inputCylinder, inputAddition, results } = this.state;    
+
     return(
       <ThemeProvider theme={theme}>
         <div className={darkMode?"AppDark":"AppLight"}>
+
           <Grid className='searchField'>
           <InputField
             inputField={inputSphere}
             name="inputSphere"
             label="Sphere"
+            onChange={this.onChange}
+          />
+          <InputField
+            inputField={inputCylinder}
+            name="inputCylinder"
+            label="Cylinder"
+            onChange={this.onChange}
+          />
+          <InputField
+            inputField={inputAddition}
+            name="inputAddition"
+            label="Addition"
             onChange={this.onChange}
           />
           <SearchButton
@@ -79,3 +114,4 @@ class App extends React.Component {
 }
 
 export default App;
+
